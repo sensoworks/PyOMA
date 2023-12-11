@@ -22,7 +22,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/dagghe/PyOMA",
     packages=find_packages(),
-    install_requires=['numpy==1.23.4','scipy==1.9.3','pandas==1.5.1','matplotlib==3.6.2','seaborn==0.12.1','mplcursors==0.5.2'],
+    install_requires=['numpy==1.24.3','scipy==1.10.1','pandas==2.0.2','matplotlib==3.7.1','seaborn==0.12.2','mplcursors==0.5.2'],
     keywords=['operational modal analysis', 'ambient vibration modal test', 'structural dynamics', 'frequency domain decomposition', 'stochastic subspace identification', 'structural health monitoring'],
     classifiers=[
         "Programming Language :: Python :: 3",
