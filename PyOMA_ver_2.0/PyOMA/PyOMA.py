@@ -979,7 +979,7 @@ def PSD_welch1(data, fs, df=0.01, pov=0.5, window='hann'):
 
 #------------------------------------------------------------------------------
 
-def FDDsvp(PSD_Results):
+def FDDsvp(PSD_Results, plot=True):
     """
     This function perform the Frequency Domain Decomposition algorithm.
     The function return the plot of the singular values of the Power Spectral
@@ -991,6 +991,9 @@ def FDDsvp(PSD_Results):
     PSD_Results : dictionary
         Dictionary of results containing the PSD matrix and the other relevant
         information.
+    plot : boolean
+        If true, generate and return the plot of the singular values. If false
+        return None instead of the plot figure. Default true
 
     Returns
     -------
@@ -1021,27 +1024,30 @@ def FDDsvp(PSD_Results):
         S1rad=np.sqrt(S1)
         S_val[:,:,_i] = S1rad
         S_vec[:,:,_i] = U1_1
-    
-    # Plot dei singular values (in scala logaritmica)
-    fig, ax = plt.subplots()
-    for _i in range(nch):
-    #    ax.semilogy(_f, S_val[_i, _i]) # scala log
-        ax.plot(freq_hz[:], 10*np.log10(S_val[_i, _i])) # decibel
-    ax.grid()
-    ax.set_xlim(left=0, right=freq_max)
-    ax.xaxis.set_major_locator(MultipleLocator(freq_max/10))
-    ax.xaxis.set_major_formatter(FormatStrFormatter('%g'))
-    ax.xaxis.set_minor_locator(MultipleLocator(freq_max/100))
-    ax.set_title("Singular values plot - (Freq. res. ={0})".format(df))
-    ax.set_xlabel('Frequency [Hz]')
-    ax.set_ylabel(r'dB $[g^2/Hz]$')    
-    # ax.set_ylabel(r'dB $\left[\frac{\left(\frac{m}{s^2}\right)^2}{Hz}\right]$')    
-    mplcursors.cursor()
+
+    if plot:
+        # Plot dei singular values (in scala logaritmica)
+        fig, ax = plt.subplots()
+        for _i in range(nch):
+        #    ax.semilogy(_f, S_val[_i, _i]) # scala log
+            ax.plot(freq_hz[:], 10*np.log10(S_val[_i, _i])) # decibel
+        ax.grid()
+        ax.set_xlim(left=0, right=freq_max)
+        ax.xaxis.set_major_locator(MultipleLocator(freq_max/10))
+        ax.xaxis.set_major_formatter(FormatStrFormatter('%g'))
+        ax.xaxis.set_minor_locator(MultipleLocator(freq_max/100))
+        ax.set_title("Singular values plot - (Freq. res. ={0})".format(df))
+        ax.set_xlabel('Frequency [Hz]')
+        ax.set_ylabel(r'dB $[g^2/Hz]$')
+        # ax.set_ylabel(r'dB $\left[\frac{\left(\frac{m}{s^2}\right)^2}{Hz}\right]$')
+        mplcursors.cursor()
+    else:
+        fig = None
 
     Results = PSD_Results.copy()
     Results['Singular Values'] = S_val
     Results['Singular Vectors'] = S_vec
-    
+
     return fig, Results
 
 #------------------------------------------------------------------------------
