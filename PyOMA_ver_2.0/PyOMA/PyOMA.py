@@ -785,45 +785,47 @@ def SSIModEX(FreQ, Results, deltaf=0.05, aMaClim=0.95):
         
         npoli = len(df3['Frequency'].values) # number of poles
         
-        AutoMacche = np.zeros((npoli, npoli),dtype=complex) # initialization
-        # Looping throug the extracted poles to calculate the autoMAC
-        # matrix (between the poles)
-        for b in range(npoli): # first loop
-            zuno = int(df3['Order'].values[b]) # index 1 of the mode shape
-            fiuno = Ms[zuno][:,int(df3['Emme'].values[b])] # shape 1
-            for k in range(npoli): # secondo loop
-                zdue = int(df3['Order'].values[k]) # index 1 of the mode shape 
-                fidue = Ms[zdue][:,int(df3['Emme'].values[k])] # shape 2
-                    
-                AutoMacche[b, k] = MaC(fiuno,fidue) # MaC between every pole
-        # I look for the pole that have the highest sum of macs
-        SAmaC = np.sum(AutoMacche, axis=1) #adding up every value on a column
-        idxmax = np.argmax(SAmaC) # 
-        
-        # Index 1 of reference shape
-        MSrefidx1 = int(df3['Order'].values[idxmax])
-        # Index 2 of reference shape
-        MSrefidx2 = int(df3['Emme'].values[idxmax])
-        firef = Ms[MSrefidx1][:,MSrefidx2] # Reference shape
-        
-        idmax = np.argmax(abs(firef))
-        firef = firef/firef[idmax] # normalised (unity displacement)
+        # If tolerance is too tight df3 could be empty
+        if npoli > 0:
+            AutoMacche = np.zeros((npoli, npoli),dtype=complex) # initialization
+            # Looping throug the extracted poles to calculate the autoMAC
+            # matrix (between the poles)
+            for b in range(npoli): # first loop
+                zuno = int(df3['Order'].values[b]) # index 1 of the mode shape
+                fiuno = Ms[zuno][:,int(df3['Emme'].values[b])] # shape 1
+                for k in range(npoli): # secondo loop
+                    zdue = int(df3['Order'].values[k]) # index 1 of the mode shape
+                    fidue = Ms[zdue][:,int(df3['Emme'].values[k])] # shape 2
+
+                    AutoMacche[b, k] = MaC(fiuno,fidue) # MaC between every pole
+            # I look for the pole that have the highest sum of macs
+            SAmaC = np.sum(AutoMacche, axis=1) #adding up every value on a column
+            idxmax = np.argmax(SAmaC) #
+
+            # Index 1 of reference shape
+            MSrefidx1 = int(df3['Order'].values[idxmax])
+            # Index 2 of reference shape
+            MSrefidx2 = int(df3['Emme'].values[idxmax])
+            firef = Ms[MSrefidx1][:,MSrefidx2] # Reference shape
+
+            idmax = np.argmax(abs(firef))
+            firef = firef/firef[idmax] # normalised (unity displacement)
 
 
-        # keeping only the poles that have MAC > MAClim value
-        AMaC = AutoMacche[idxmax]
-        df3['AMaC'] = AMaC
-        df3 = df3.where(df3.AMaC > aMaClim)
-        df3 = df3.dropna()
-        
-        FrMean = df3.Frequency.mean() # Mean frequency
-        # FrStd = df3.Frequency.std() # dev.std.
-        DampMean = df3.Damp.mean() # Mean damping
-        # DampStd = df3.Damp.std() # dev.std. 
-        
-        Freq.append(FrMean)
-        Damp.append(DampMean)
-        Fi.append(firef)
+            # keeping only the poles that have MAC > MAClim value
+            AMaC = AutoMacche[idxmax]
+            df3['AMaC'] = AMaC
+            df3 = df3.where(df3.AMaC > aMaClim)
+            df3 = df3.dropna()
+
+            FrMean = df3.Frequency.mean() # Mean frequency
+            # FrStd = df3.Frequency.std() # dev.std.
+            DampMean = df3.Damp.mean() # Mean damping
+            # DampStd = df3.Damp.std() # dev.std.
+
+            Freq.append(FrMean)
+            Damp.append(DampMean)
+            Fi.append(firef)
     
     Freq = np.array(Freq)
     Damp = np.array(Damp)
@@ -1334,7 +1336,7 @@ def EFDDmodEX(FreQ, Results, ndf=5, cm=1 , MAClim=0.85, sppk=3, npmax=30,
     
     Freq = np.array(Freq_E)
     Damp = np.array(Damp_E)
-    Fi = np.array(Fi_E)
+    #Fi = np.array(Fi_E)
 
     Results={}
     Results['Frequencies'] = Freq
