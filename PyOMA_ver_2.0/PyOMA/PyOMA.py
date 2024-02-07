@@ -201,7 +201,7 @@ def Exdata():
 #------------------------------------------------------------------------------
     
 def SSIdatStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1), 
-                  method='1'):
+                  method='1', plot=True):
     '''
     This function perform the Data-driven Stochastic sub-Space Identification 
     algorithm.
@@ -238,6 +238,9 @@ def SSIdatStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1),
                                      sequence S_(i+1) 
             - method "2" : the second method takes advantages of the shift of
                            the observability matrix
+    
+    plot : True or False
+        Whether to plot or not the results. Default to True.
     -------
     Returns
     -------
@@ -444,23 +447,25 @@ def SSIdatStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1),
     df2 = df2.dropna()# Dropping nans
     df2 = df2.drop_duplicates(subset='Frequency') # removing conjugates
     
-    
-    # df4 = df4.where(df2.Order > ordmin).dropna() # Tengo solo i poli sopra ordmin
-    # assigning colours to the labels
-    _colors = {0:'Red', 1:'darkorange', 2:'gold', 3:'yellow', 4:'Green'} 
-    
-    fig1, ax1 = plt.subplots()
-    ax1 = sns.scatterplot(x=df2['Frequency'], y=df2['Order']*2+ordmin, hue=df2['Label'], palette=_colors)
-    
-    ax1.set_xlim(left=0, right=freq_max)
-    ax1.set_ylim(bottom=ordmin, top=ordmax)
-    ax1.xaxis.set_major_locator(MultipleLocator(freq_max/10))
-    ax1.xaxis.set_major_formatter(FormatStrFormatter('%g'))
-    ax1.xaxis.set_minor_locator(MultipleLocator(freq_max/100))
-    ax1.set_title('''{0} - shift: {1}'''.format('Stabilization Diagram', br))
-    ax1.set_xlabel('Frequency [Hz]')
-    mplcursors.cursor()
-    # plt.show()
+    if plot:
+        # df4 = df4.where(df2.Order > ordmin).dropna() # Tengo solo i poli sopra ordmin
+        # assigning colours to the labels
+        _colors = {0:'Red', 1:'darkorange', 2:'gold', 3:'yellow', 4:'Green'} 
+        
+        fig1, ax1 = plt.subplots()
+        ax1 = sns.scatterplot(x=df2['Frequency'], y=df2['Order']*2+ordmin, hue=df2['Label'], palette=_colors)
+        
+        ax1.set_xlim(left=0, right=freq_max)
+        ax1.set_ylim(bottom=ordmin, top=ordmax)
+        ax1.xaxis.set_major_locator(MultipleLocator(freq_max/10))
+        ax1.xaxis.set_major_formatter(FormatStrFormatter('%g'))
+        ax1.xaxis.set_minor_locator(MultipleLocator(freq_max/100))
+        ax1.set_title('''{0} - shift: {1}'''.format('Stabilization Diagram', br))
+        ax1.set_xlabel('Frequency [Hz]')
+        mplcursors.cursor()
+        # plt.show()
+    else:
+        fig1 = None
     
     Results={}
     # if ordmin == None:
@@ -481,7 +486,7 @@ def SSIdatStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1),
 
 
 def SSIcovStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1), 
-                  method='1'):
+                  method='1', plot=True):
     '''
     This function perform the covariance-driven Stochastic sub-Space 
     Identification algorithm.
@@ -520,6 +525,9 @@ def SSIcovStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1),
                                      matrix.
             - method "2" : the second method is based on the decomposition 
                            property of the one-lag shifted Toeplitz matrix.
+            
+    plot : True or False
+        Whether to plot or not the results. Default to True.
     -------
     Returns
     -------
@@ -701,23 +709,25 @@ def SSIcovStaDiag(data, fs, br, ordmin=0, ordmax=None, lim=(0.01,0.05,0.02,0.1),
     df2 = df2.dropna()# Dropping nans
     df2 = df2.drop_duplicates(subset='Frequency') # removing conjugates
     
-    
-    # df4 = df4.where(df2.Order > ordmin).dropna() # Tengo solo i poli sopra ordmin
-    # assigning colours to the labels
-    _colors = {0:'Red', 1:'darkorange', 2:'gold', 3:'yellow', 4:'Green'} 
-    
-    fig1, ax1 = plt.subplots()
-    ax1 = sns.scatterplot(x=df2['Frequency'], y=df2['Order']*2+ordmin, hue=df2['Label'], palette=_colors)
-    
-    ax1.set_xlim(left=0, right=freq_max)
-    ax1.set_ylim(bottom=ordmin, top=ordmax)
-    ax1.xaxis.set_major_locator(MultipleLocator(freq_max/10))
-    ax1.xaxis.set_major_formatter(FormatStrFormatter('%g'))
-    ax1.xaxis.set_minor_locator(MultipleLocator(freq_max/100))
-    ax1.set_title('''{0} - shift: {1}'''.format('Stabilization Diagram', br))
-    ax1.set_xlabel('Frequency [Hz]')
-    mplcursors.cursor()
-    # plt.show()
+    if plot:
+        # df4 = df4.where(df2.Order > ordmin).dropna() # Tengo solo i poli sopra ordmin
+        # assigning colours to the labels
+        _colors = {0:'Red', 1:'darkorange', 2:'gold', 3:'yellow', 4:'Green'} 
+        
+        fig1, ax1 = plt.subplots()
+        ax1 = sns.scatterplot(x=df2['Frequency'], y=df2['Order']*2+ordmin, hue=df2['Label'], palette=_colors)
+        
+        ax1.set_xlim(left=0, right=freq_max)
+        ax1.set_ylim(bottom=ordmin, top=ordmax)
+        ax1.xaxis.set_major_locator(MultipleLocator(freq_max/10))
+        ax1.xaxis.set_major_formatter(FormatStrFormatter('%g'))
+        ax1.xaxis.set_minor_locator(MultipleLocator(freq_max/100))
+        ax1.set_title('''{0} - shift: {1}'''.format('Stabilization Diagram', br))
+        ax1.set_xlabel('Frequency [Hz]')
+        mplcursors.cursor()
+        # plt.show()
+    else:
+        fig1 = None
     
     Results={}
     # if ordmin == None:
@@ -1130,7 +1140,7 @@ def FDDmodEX(FreQ, Results, ndf=5):
 
 
 def EFDDmodEX(FreQ, Results, ndf=5, cm=1 , MAClim=0.85, sppk=3, npmax=30,
-              method='FSDD', plot=False):
+              method='FSDD', plot=False, charts=False):
     '''
     This function returns the modal parameters estimated according to the
     enhanced version of the Frequency Domain Decomposition method.
@@ -1161,6 +1171,9 @@ def EFDDmodEX(FreQ, Results, ndf=5, cm=1 , MAClim=0.85, sppk=3, npmax=30,
         uses the classical Enhanced Frequency Domain Decomposition algorithm.
     plot : True or False
         Whether to plot or not the results. Default to False.
+    charts : True or False
+        Whether to returns the numerical values used to generate the plot. 
+        Default to False
     -------
     Returns
     -------
@@ -1196,7 +1209,13 @@ def EFDDmodEX(FreQ, Results, ndf=5, cm=1 , MAClim=0.85, sppk=3, npmax=30,
     Fi_E = []
     Damp_E = []
     Figs = []
-    
+    Charts = []
+
+    # Spectral plot is common to all modes and methods
+    if charts:
+        Chart = {}
+        Chart['SDOF Bell function (spectral)'] = np.array([f, 10 * np.log10(S_val[0,0])])
+        Charts.append(Chart)
     
     for n in range(len(Freq)): # looping through all frequencies to estimate
         _fi = Fi[: , n] # Select reference mode shape (from FDD)
@@ -1332,7 +1351,18 @@ def EFDDmodEX(FreQ, Results, ndf=5, cm=1 , MAClim=0.85, sppk=3, npmax=30,
     
             plt.tight_layout()
             Figs.append(_fig)
-#------------------------------------------------------------------------------   
+        
+        if charts:
+            Chart = {}
+            Chart['Method'] = method
+            Chart['Mode'] = f'Mode{len(Charts)}'
+            Chart['SDOF Bell function'] = np.array([fsval.flatten(), (10 * np.log10(SDOFbell[idSV].real)).flatten()])
+            Chart['Auto-correlation Function'] = np.array([timeLag[:len(SDOFcorr1)//2], normSDOFcorr])
+            Chart['Portion for fit (plot)'] = np.array([timeLag[:minmax_fit_idx[-1]], normSDOFcorr[:minmax_fit_idx[-1]]])
+            Chart['Portion for fit (scatter)'] = np.array([timeLag[minmax_fit_idx], normSDOFcorr[minmax_fit_idx]])
+            Chart['Fit - Frequency and Damping (plot)'] = np.array([np.arange(len(minmax_fit)), delta])
+            Chart['Fit - Frequency and Damping (scatter)'] = np.array([np.arange(len(minmax_fit)), m * np.arange(len(minmax_fit))])
+            Charts.append(Chart)
     
     Freq = np.array(Freq_E)
     Damp = np.array(Damp_E)
@@ -1342,7 +1372,9 @@ def EFDDmodEX(FreQ, Results, ndf=5, cm=1 , MAClim=0.85, sppk=3, npmax=30,
     Results['Frequencies'] = Freq
     Results['Damping'] = Damp
     Results['Mode Shapes'] = Fi.T
+    Results['Charts'] = Charts
 
     return Figs, Results
 
+#------------------------------------------------------------------------------   
 
